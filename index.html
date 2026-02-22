@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimHospital – Multi-Facility Patient Flow Optimization</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,600;1,8..60,300&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ucsd-blue:  #182B49;
+      --ucsd-gold:  #C69214;
+      --teal:       #00827F;
+      --off-white:  #F7F5F0;
+      --light-gray: #EDEAE3;
+      --mid-gray:   #8A8A8A;
+      --text:       #1A1A1A;
+      --max-w:      780px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 300;
+      background: var(--off-white);
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--ucsd-blue);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 52px;
+    }
+    nav .brand {
+      font-family: 'Source Serif 4', serif; font-weight: 600;
+      font-size: 1rem; color: #fff; letter-spacing: 0.02em;
+    }
+    nav ul { list-style: none; display: flex; gap: 1.8rem; }
+    nav ul a {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      font-size: 0.78rem; font-weight: 400;
+      letter-spacing: 0.07em; text-transform: uppercase; transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--ucsd-gold); }
+
+    /* ── Hero ── */
+    #hero {
+      background: var(--ucsd-blue); color: #fff;
+      padding: 6rem 2rem 5rem; text-align: center; position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(45deg, transparent, transparent 60px,
+        rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px);
+      pointer-events: none;
+    }
+    .hero-tag {
+      display: inline-block; background: var(--ucsd-gold); color: var(--ucsd-blue);
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 0.3rem 0.9rem;
+      border-radius: 2px; margin-bottom: 1.5rem;
+    }
+    #hero h1 {
+      font-family: 'Source Serif 4', serif; font-weight: 600;
+      font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.2;
+      max-width: 700px; margin: 0 auto 1.2rem;
+    }
+    #hero p.subtitle {
+      font-size: 1rem; color: rgba(255,255,255,0.7);
+      max-width: 560px; margin: 0 auto 2rem;
+    }
+    .hero-authors {
+      font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 2.5rem;
+    }
+    .hero-authors span { color: rgba(255,255,255,0.85); }
+    .btn-group { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-block; padding: 0.6rem 1.5rem; border-radius: 3px;
+      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.04em;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--ucsd-gold); color: var(--ucsd-blue); }
+    .btn-primary:hover { background: #d9a520; }
+    .btn-outline { border: 1px solid rgba(255,255,255,0.4); color: #fff; }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+
+    /* ── Stat bar ── */
+    .stat-bar {
+      background: var(--teal);
+      display: flex; justify-content: center; flex-wrap: wrap;
+    }
+    .stat-item {
+      padding: 1.4rem 2.5rem; text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.15);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Source Serif 4', serif; font-size: 1.6rem;
+      font-weight: 600; color: #fff; display: block;
+    }
+    .stat-label { font-size: 0.72rem; color: rgba(255,255,255,0.75); letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* ── Sections ── */
+    section { padding: 5rem 2rem; }
+    section:nth-of-type(even) { background: var(--light-gray); }
+    .container { max-width: var(--max-w); margin: 0 auto; }
+    .section-eyebrow {
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-family: 'Source Serif 4', serif; font-weight: 600;
+      font-size: clamp(1.5rem, 3vw, 2rem); color: var(--ucsd-blue);
+      margin-bottom: 1rem; line-height: 1.25;
+    }
+    h3 {
+      font-family: 'Source Serif 4', serif; font-weight: 600;
+      font-size: 1.15rem; color: var(--ucsd-blue); margin: 2rem 0 0.5rem;
+    }
+    p { margin-bottom: 1rem; color: #333; }
+    .divider { width: 48px; height: 3px; background: var(--ucsd-gold); margin: 0.5rem 0 1.6rem; }
+
+    /* ── Placeholder blocks ── */
+    .placeholder-text {
+      color: var(--mid-gray); font-style: italic;
+      background: rgba(0,0,0,0.03); border-left: 3px solid #D8D4CC;
+      padding: 0.8rem 1rem; border-radius: 0 4px 4px 0; margin-bottom: 1.2rem;
+    }
+
+    /* ── Figure placeholders ── */
+    .fig-placeholder {
+      background: #E8E4DA; border: 2px dashed #C8C3B8; border-radius: 6px;
+      height: 240px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      margin: 1.5rem 0; color: var(--mid-gray); font-size: 0.85rem; gap: 0.4rem;
+    }
+    .fig-placeholder .fig-icon { font-size: 2rem; opacity: 0.4; }
+    .fig-caption { font-size: 0.8rem; color: var(--mid-gray); text-align: center; margin-top: -0.8rem; margin-bottom: 1.5rem; }
+
+    /* ── Dropdowns ── */
+    details {
+      border: 1px solid #D8D4CC; border-radius: 5px;
+      margin: 1.2rem 0; background: #fff; overflow: hidden;
+    }
+    summary {
+      padding: 0.85rem 1.1rem; font-size: 0.85rem; font-weight: 500;
+      color: var(--teal); cursor: pointer; list-style: none;
+      display: flex; align-items: center; gap: 0.5rem; user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: '▶'; font-size: 0.6rem; transition: transform 0.2s; color: var(--ucsd-gold); }
+    details[open] summary::before { transform: rotate(90deg); }
+    details .details-body {
+      padding: 0.8rem 1.1rem 1rem; font-size: 0.88rem;
+      color: #444; border-top: 1px solid #E8E4DA;
+    }
+
+    /* ── Campus cards ── */
+    .campus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .campus-card {
+      background: #fff; border: 1px solid #D8D4CC;
+      border-top: 3px solid var(--ucsd-blue); border-radius: 5px; padding: 1.2rem;
+    }
+    .campus-card:nth-child(2) { border-top-color: var(--teal); }
+    .campus-card:nth-child(3) { border-top-color: var(--ucsd-gold); }
+    .campus-card h4 {
+      font-family: 'Source Serif 4', serif; font-size: 0.95rem;
+      font-weight: 600; color: var(--ucsd-blue); margin-bottom: 0.3rem;
+    }
+    .campus-card p { font-size: 0.8rem; color: var(--mid-gray); margin: 0; }
+
+    /* ── Team ── */
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
+    .team-card {
+      background: #fff; border: 1px solid #D8D4CC;
+      border-radius: 5px; padding: 1.4rem 1.2rem; text-align: center;
+    }
+    .team-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--ucsd-blue); margin: 0 auto 0.8rem;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-family: 'Source Serif 4', serif; font-size: 1.1rem;
+    }
+    .team-card h4 { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.15rem; }
+    .team-card .role { color: var(--teal); font-size: 0.75rem; margin-bottom: 0.4rem; }
+    .team-card p { font-size: 0.78rem; color: var(--mid-gray); margin: 0; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--ucsd-blue); color: rgba(255,255,255,0.5);
+      text-align: center; padding: 2.5rem 1rem; font-size: 0.8rem;
+    }
+    footer a { color: var(--ucsd-gold); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .campus-grid { grid-template-columns: 1fr; }
+      nav ul { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <span class="brand">SimHospital</span>
+    <ul>
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#data">Data</a></li>
+      <li><a href="#methods">Methods</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#team">Team</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-tag">DSC Capstone &nbsp;·&nbsp; UC San Diego &nbsp;·&nbsp; 2025–2026</div>
+    <h1>Simulating Patient Flow Across UC San Diego Health</h1>
+    <p class="subtitle">
+      A data-driven discrete event simulation of UCSD Health's three-hospital system —
+      built to reduce ED boarding and improve system-wide capacity planning.
+    </p>
+    <p class="hero-authors">
+      <span>Nadine Orriss</span> &amp; <span>Kayanne Tran</span>
+      &nbsp;·&nbsp; Mentored by Dr. Karandeep Singh &amp; Aaron Boussina
+    </p>
+    <div class="btn-group">
+      <a href="#" class="btn btn-primary">Read the Report</a>
+      <a href="https://github.com/kayannet/SimHospital" class="btn btn-outline" target="_blank">View on GitHub</a>
+    </div>
+  </section>
+
+  <!-- Stat Bar -->
+  <div class="stat-bar">
+    <div class="stat-item">
+      <span class="stat-num">2.1M</span>
+      <span class="stat-label">ADT Events</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">150K+</span>
+      <span class="stat-label">Patient Trajectories</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">3</span>
+      <span class="stat-label">Hospital Campuses</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">9</span>
+      <span class="stat-label">Simulated States</span>
+    </div>
+  </div>
+
+  <!-- Introduction -->
+  <section id="introduction">
+    <div class="container">
+      <p class="section-eyebrow">The Problem</p>
+      <h2>When the Emergency Department Becomes a Waiting Room</h2>
+      <div class="divider"></div>
+
+      <p class="placeholder-text">
+        [Content coming — explain ED boarding in plain language: what it is, why it matters,
+        and who it affects. Hook the general reader with a real-world consequence.]
+      </p>
+
+      <p class="placeholder-text">
+        [Explain the coordination challenge of a multi-hospital system. Why is this harder
+        than managing a single hospital?]
+      </p>
+
+      <h3>Our Approach</h3>
+      <p class="placeholder-text">
+        [Briefly introduce discrete event simulation in plain English — what it does and
+        why it's the right tool for this problem.]
+      </p>
+
+      <div class="fig-placeholder">
+        <span class="fig-icon">🏥</span>
+        <span>Figure — System overview: 3 campuses, 3 care tiers, patient flow paths</span>
+      </div>
+      <p class="fig-caption">Figure 1. Conceptual overview of UCSD Health's three-campus patient flow network.</p>
+    </div>
+  </section>
+
+  <!-- Data -->
+  <section id="data">
+    <div class="container">
+      <p class="section-eyebrow">The Data</p>
+      <h2>One Year of Real Patient Journeys</h2>
+      <div class="divider"></div>
+
+      <p class="placeholder-text">
+        [Describe the ADT dataset at a high level — what it captures, its scale,
+        and why it is uniquely valuable for building a realistic simulation.]
+      </p>
+
+      <div class="campus-grid">
+        <div class="campus-card">
+          <h4>La Jolla</h4>
+          <p>Jacobs Medical Center &amp; Sulpizio Cardiovascular Center · 418 posted beds</p>
+        </div>
+        <div class="campus-card">
+          <h4>Hillcrest</h4>
+          <p>Hillcrest Medical Center · 381 posted beds</p>
+        </div>
+        <div class="campus-card">
+          <h4>East Campus</h4>
+          <p>East Campus Medical Center · 302 posted beds</p>
+        </div>
+      </div>
+
+      <details>
+        <summary>Technical detail — Data preprocessing pipeline</summary>
+        <div class="details-body">
+          <p class="placeholder-text">
+            [Describe the 4-step pipeline: filtering to bed-occupying patients,
+            dropping single-event encounters, tier mapping, timestamp ordering.]
+          </p>
+        </div>
+      </details>
+
+      <div class="fig-placeholder">
+        <span class="fig-icon">📊</span>
+        <span>Figure — Patient arrival rates by campus, weekday vs. weekend</span>
+      </div>
+      <p class="fig-caption">Figure 2. Mean daily arrivals per campus, differentiated by day type.</p>
+    </div>
+  </section>
+
+  <!-- Methods -->
+  <section id="methods">
+    <div class="container">
+      <p class="section-eyebrow">Methods</p>
+      <h2>Building a Virtual Hospital System</h2>
+      <div class="divider"></div>
+
+      <p class="placeholder-text">
+        [Explain the simulation intuitively — each patient follows a real historical path
+        drawn from the trajectory library. What makes this more realistic than
+        probability-based approaches?]
+      </p>
+
+      <div class="fig-placeholder">
+        <span class="fig-icon">🔄</span>
+        <span>Figure — 9-state model: ED / Floor / ICU × 3 campuses + Discharge</span>
+      </div>
+      <p class="fig-caption">Figure 3. The 9-state simulation model mapping care tiers across all three campuses.</p>
+
+      <details>
+        <summary>Technical detail — Simulation architecture (SimPy)</summary>
+        <div class="details-body">
+          <p class="placeholder-text">
+            [Patient, Model, Trial class design; arrival generator; bed resources;
+            utilization audit; weekday/weekend arrival rate switching.]
+          </p>
+        </div>
+      </details>
+
+      <h3>Predicting Who Needs Admission</h3>
+      <p class="placeholder-text">
+        [Plain-language description of the binary admission predictor and how it
+        enables smarter transfer decisions in the simulation.]
+      </p>
+
+      <h3>Estimating Length of Stay</h3>
+      <p class="placeholder-text">
+        [Plain-language description of the LOS quantile regression model and why
+        it's more useful than mean prediction for this application.]
+      </p>
+
+      <details>
+        <summary>Technical detail — Predictive model specifications</summary>
+        <div class="details-body">
+          <p class="placeholder-text">
+            [Features used, MRN-based train/test split to prevent leakage,
+            evaluation metrics, quantile regression rationale.]
+          </p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section id="results">
+    <div class="container">
+      <p class="section-eyebrow">Results &amp; Impact</p>
+      <h2>What the Simulation Reveals</h2>
+      <div class="divider"></div>
+
+      <p class="placeholder-text">
+        [Introduce the unconstrained simulation results in plain terms — what did
+        we learn about how the real system operates day-to-day?]
+      </p>
+
+      <div class="fig-placeholder">
+        <span class="fig-icon">📈</span>
+        <span>Figure — Bed utilization over 730 hours: La Jolla (ED, Floor, ICU)</span>
+      </div>
+      <p class="fig-caption">Figure 4. Simulated bed usage over 730 hours at La Jolla campus under unconstrained conditions.</p>
+
+      <div class="fig-placeholder">
+        <span class="fig-icon">📈</span>
+        <span>Figure — Bed utilization over 730 hours: Hillcrest &amp; East Campus</span>
+      </div>
+      <p class="fig-caption">Figure 5. Simulated bed usage at Hillcrest and East Campus.</p>
+
+      <h3>Inferring Realistic Bed Capacity</h3>
+      <p class="placeholder-text">
+        [Explain the peak vs. typical occupancy finding and what it means for
+        capacity planning. Make the La Jolla 18% overestimate accessible
+        to a general reader by explaining the boarding effect.]
+      </p>
+
+      <details>
+        <summary>Technical detail — Capacity parameter tables</summary>
+        <div class="details-body">
+          <p class="placeholder-text">
+            [Table 1: peak occupancy. Table 2: time-weighted typical occupancy.
+            Table 3: comparison against posted bed capacity by campus.]
+          </p>
+        </div>
+      </details>
+
+      <h3>What Comes Next</h3>
+      <p class="placeholder-text">
+        [Describe the next steps: constrained runs, dynamic transfer logic with
+        the predictive models, scenario analysis. Frame around real-world impact —
+        what decisions could UCSD Health make using this tool?]
+      </p>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section id="team">
+    <div class="container">
+      <p class="section-eyebrow">The Team</p>
+      <h2>About Us</h2>
+      <div class="divider"></div>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar">NO</div>
+          <h4>Nadine Orriss</h4>
+          <p class="role">Data Science · UC San Diego</p>
+          <p>Data preprocessing, EDA, trajectory library &amp; arrival rate modeling</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">KT</div>
+          <h4>Kayanne Tran</h4>
+          <p class="role">Data Science · UC San Diego</p>
+          <p>Simulation architecture, SimPy implementation &amp; capacity inference</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">KS</div>
+          <h4>Dr. Karandeep Singh</h4>
+          <p class="role">Mentor · UCSD Health</p>
+          <p>Clinical domain expertise and project guidance</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">AB</div>
+          <h4>Aaron Boussina</h4>
+          <p class="role">Mentor · UCSD Health</p>
+          <p>Clinical domain expertise and project guidance</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      DSC Capstone &nbsp;·&nbsp; UC San Diego &nbsp;·&nbsp; 2025–2026
+      &nbsp;·&nbsp;
+      <a href="https://github.com/kayannet/SimHospital" target="_blank">GitHub</a>
+      &nbsp;·&nbsp;
+      <a href="#">Report (PDF)</a>
+    </p>
+    <p style="margin-top:0.5rem; font-size:0.72rem;">Built by Nadine Orriss &amp; Kayanne Tran</p>
+  </footer>
+
+</body>
+</html>
