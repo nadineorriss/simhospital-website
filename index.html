@@ -52,17 +52,6 @@
     }
     nav ul a:hover { color: var(--ucsd-gold); }
 
-    /* ── Nav wrapper (makes mobile menu stick with nav) ── */
-    .nav-wrapper {
-      position: sticky; top: 0; z-index: 100;
-    }
-    nav {
-      background: var(--ucsd-blue);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem; height: 52px;
-      position: static; /* override any sticky on nav itself */
-    }
-
     /* ── Hamburger ── */
     .hamburger {
       display: none; flex-direction: column; gap: 5px;
@@ -74,9 +63,9 @@
       transition: all 0.2s;
     }
     .mobile-menu {
-      display: none;
+      display: none; position: absolute; top: 52px; left: 0; right: 0;
       background: var(--ucsd-blue); border-top: 1px solid rgba(255,255,255,0.1);
-      padding: 1rem 2rem; flex-direction: column; gap: 0.8rem;
+      padding: 1rem 2rem; flex-direction: column; gap: 0.8rem; z-index: 99;
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
@@ -203,6 +192,18 @@
     .demo-block p {
       color: rgba(255,255,255,0.75); font-size: 0.88rem; margin-bottom: 1.2rem;
     }
+    .demo-steps {
+      background: rgba(255,255,255,0.08); border-radius: 5px;
+      padding: 1rem 1.2rem; margin: 1rem 0 1.4rem; text-align: left;
+    }
+    .demo-steps p {
+      color: rgba(255,255,255,0.85); font-size: 0.82rem;
+      font-weight: 500; margin-bottom: 0.4rem;
+    }
+    .demo-steps ol {
+      padding-left: 1.2rem; color: rgba(255,255,255,0.7);
+      font-size: 0.82rem; line-height: 1.8;
+    }
 
     /* ── Dropdowns ── */
     details {
@@ -249,6 +250,49 @@
       color: var(--ucsd-gold); font-weight: 600;
     }
 
+    /* ── Two-col contributions ── */
+    .contrib-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;
+    }
+    .contrib-card {
+      background: #fff; border: 1px solid #D8D4CC; border-radius: 5px; padding: 1.2rem;
+    }
+    .contrib-card h4 {
+      font-family: 'Source Serif 4', serif; font-size: 0.92rem; font-weight: 600;
+      color: var(--ucsd-blue); margin-bottom: 0.6rem;
+    }
+    .contrib-card ul { list-style: none; padding: 0; }
+    .contrib-card ul li {
+      font-size: 0.82rem; color: #444; padding: 0.25rem 0 0.25rem 1.2rem;
+      position: relative; border-bottom: 1px solid #F0EDE6;
+    }
+    .contrib-card ul li:last-child { border-bottom: none; }
+    .contrib-card ul li::before { content: '✓'; position: absolute; left: 0; color: var(--teal); font-size: 0.75rem; }
+
+    /* ── Iteration timeline ── */
+    .iter-list { list-style: none; margin: 1rem 0; }
+    .iter-list li {
+      display: grid; grid-template-columns: 2.2rem 1fr;
+      gap: 0.8rem; padding: 0.8rem 0; border-bottom: 1px solid #E8E4DA;
+      font-size: 0.9rem; color: #333; align-items: start;
+    }
+    .iter-list li:last-child { border-bottom: none; }
+    .iter-num {
+      width: 2rem; height: 2rem; border-radius: 50%;
+      background: var(--ucsd-blue); color: #fff;
+      font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.1rem;
+    }
+
+    /* ── References ── */
+    .ref-list { list-style: none; margin: 1rem 0; }
+    .ref-list li {
+      font-size: 0.82rem; color: #555; padding: 0.5rem 0 0.5rem 1.2rem;
+      border-bottom: 1px solid #E8E4DA; position: relative; line-height: 1.6;
+    }
+    .ref-list li:last-child { border-bottom: none; }
+    .ref-list li::before { content: '·'; position: absolute; left: 0.2rem; color: var(--ucsd-gold); font-weight: 700; }
+
     /* ── Team ── */
     .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
     .team-card {
@@ -277,6 +321,7 @@
     @media (max-width: 640px) {
       .campus-grid { grid-template-columns: 1fr; }
       .fig-row { grid-template-columns: 1fr; }
+      .contrib-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 540px) {
       nav ul { display: none; }
@@ -289,28 +334,26 @@
 <body>
 
   <!-- Navigation -->
-  <div class="nav-wrapper">
-    <nav>
-      <a href="#" class="brand">SimHospital</a>
-      <ul>
-        <li><a href="#introduction">Problem</a></li>
-        <li><a href="#data">Data</a></li>
-        <li><a href="#methods">Methods</a></li>
-        <li><a href="#results">Results</a></li>
-        <li><a href="#team">Team</a></li>
-      </ul>
-      <button class="hamburger" id="hamburger" aria-label="Open menu">
-        <span></span><span></span><span></span>
-      </button>
-    </nav>
-    <div class="mobile-menu" id="mobileMenu">
-      <a href="#" onclick="closeMobileMenu()">↑ Top</a>
-      <a href="#introduction" onclick="closeMobileMenu()">Problem</a>
-      <a href="#data" onclick="closeMobileMenu()">Data</a>
-      <a href="#methods" onclick="closeMobileMenu()">Methods</a>
-      <a href="#results" onclick="closeMobileMenu()">Results</a>
-      <a href="#team" onclick="closeMobileMenu()">Team</a>
-    </div>
+  <nav>
+    <a href="#" class="brand">SimHospital</a>
+    <ul>
+      <li><a href="#introduction">Problem</a></li>
+      <li><a href="#data">Data</a></li>
+      <li><a href="#methods">Methods</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#team">Team</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#" onclick="closeMobileMenu()">↑ Top</a>
+    <a href="#introduction" onclick="closeMobileMenu()">Problem</a>
+    <a href="#data" onclick="closeMobileMenu()">Data</a>
+    <a href="#methods" onclick="closeMobileMenu()">Methods</a>
+    <a href="#results" onclick="closeMobileMenu()">Results</a>
+    <a href="#team" onclick="closeMobileMenu()">Team</a>
   </div>
 
   <!-- Hero -->
@@ -318,8 +361,9 @@
     <div class="hero-tag">DSC Capstone &nbsp;·&nbsp; UC San Diego &nbsp;·&nbsp; 2025–2026</div>
     <h1>Simulating Patient Flow Across UC San Diego Health</h1>
     <p class="subtitle">
-      A data-driven simulation of UCSD Health's three-hospital network — built to identify
-      capacity bottlenecks and evaluate smarter patient transfer policies.
+      A data-driven simulation of UCSD Health's three-hospital network — built to give
+      hospital operations teams a safe way to test smarter patient transfer policies
+      before changing anything in the real world.
     </p>
     <p class="hero-authors">
       <span>Nadine Orriss</span> &amp; <span>Kayanne Tran</span>
@@ -382,6 +426,15 @@
         policy might work better.
       </p>
 
+      <h3>Who This Is For</h3>
+      <p>
+        This tool is designed for <strong>hospital operations leaders and health system planners</strong>
+        at UCSD Health — people responsible for capacity management, patient throughput, and
+        inter-campus coordination. Rather than relying on gut instinct or historical averages, they
+        can use this simulation to pressure-test transfer policies in a risk-free virtual environment
+        before committing to any real change in operations.
+      </p>
+
       <h3>Our Approach: A Virtual Replica of UCSD Health</h3>
       <p>
         We built a <strong>discrete event simulation (DES)</strong> — a computer model that recreates
@@ -398,10 +451,12 @@
       </p>
 
       <div class="alert">
-        <strong>Scope note:</strong> This project is a research tool, not a clinical deployment.
-        Our simulation does not make treatment recommendations, and the transfer policies we test
-        do not account for clinical contraindications, patient consent, or staffing constraints.
-        The goal is to give decision-makers a data-driven starting point for operational planning.
+        <strong>Scope &amp; boundaries:</strong> This is a research and planning tool, not a clinical
+        deployment. It models <em>bed capacity and patient flow only</em> — it does not make treatment
+        recommendations, account for clinical contraindications, patient consent, or staffing constraints.
+        All simulation results are comparative (policy A vs. policy B vs. baseline); absolute numbers
+        should be interpreted as directional signals, not operational mandates. Transfer policies were
+        each tested in isolation — simultaneous multi-campus transfer logic is a direction for future work.
       </div>
     </div>
   </section>
@@ -422,7 +477,10 @@
       <p>
         The raw dataset contains <strong>2.1 million events across 985,000 patient encounters</strong>.
         After filtering to patients who physically occupied hospital beds, we retained
-        <strong>150,337 complete patient trajectories</strong> suitable for simulation.
+        <strong>150,337 complete patient trajectories</strong> suitable for simulation. For the
+        length-of-stay prediction model, we held out 20% of encounters as a test set, with
+        the remaining 80% used for training — ensuring the predictor was never evaluated on
+        data it had seen before.
       </p>
 
       <div class="campus-grid">
@@ -487,6 +545,34 @@
         steady-state occupancy in an unconstrained simulation run.
       </p>
 
+      <h3>What We Built vs. What We Used</h3>
+      <div class="contrib-grid">
+        <div class="contrib-card">
+          <h4>🔨 Built from scratch</h4>
+          <ul>
+            <li>Multi-campus DES architecture (12-state model)</li>
+            <li>Trajectory library from 150K+ real patient paths</li>
+            <li>Weekday/weekend arrival rate modeling</li>
+            <li>Capacity calibration from empirical occupancy</li>
+            <li>LOS quantile regression predictor (3 features)</li>
+            <li>Transfer trigger &amp; stochastic rerouting logic</li>
+            <li>Threshold sensitivity analysis (3 × 3 experiments)</li>
+            <li>Interactive simulation animation</li>
+          </ul>
+        </div>
+        <div class="contrib-card">
+          <h4>📦 Built on top of</h4>
+          <ul>
+            <li><strong>SimPy</strong> — Python discrete event simulation engine</li>
+            <li><strong>vidigi</strong> — event logging &amp; resource tracking</li>
+            <li><strong>scikit-learn</strong> — quantile regression modeling</li>
+            <li><strong>pandas / NumPy</strong> — data processing</li>
+            <li><strong>matplotlib</strong> — result visualization</li>
+            <li>ADT data provided by UC San Diego Health</li>
+          </ul>
+        </div>
+      </div>
+
       <h3>Predicting Who Needs a Long Stay</h3>
       <p>
         To enable smarter transfer decisions, we trained a <strong>length-of-stay (LOS) predictor</strong>
@@ -502,12 +588,34 @@
         a less congested campus before they occupy a scarce inpatient bed.
       </p>
 
+      <h3>How the Project Evolved</h3>
+      <p>Several design decisions changed significantly after we saw early results:</p>
+      <ul class="iter-list">
+        <li>
+          <div class="iter-num">1</div>
+          <div><strong>Single-campus → multi-campus.</strong> Early prototypes simulated La Jolla in isolation. We quickly realized that without modeling receiving campuses simultaneously, any transfer policy was meaningless — you can't evaluate where patients go if those destinations aren't in the model.</div>
+        </li>
+        <li>
+          <div class="iter-num">2</div>
+          <div><strong>Synthetic paths → real trajectories.</strong> Our first approach used transition probability matrices to generate patient paths stochastically. Switching to a library of 150K real historical journeys dramatically improved how faithfully the simulation reproduced actual UCSD Health patterns.</div>
+        </li>
+        <li>
+          <div class="iter-num">3</div>
+          <div><strong>Mean LOS prediction → quantile regression.</strong> A mean LOS predictor was highly sensitive to outlier long-stay patients. Moving to the 75th percentile gave a more robust and operationally useful trigger for flagging transfers.</div>
+        </li>
+        <li>
+          <div class="iter-num">4</div>
+          <div><strong>Single threshold → threshold sweep.</strong> Testing only one LOS threshold initially obscured the non-linear behavior we later discovered: East Campus ICU is catastrophically overwhelmed at a 3-hour Hillcrest threshold but partially recovers at 8 hours. The sweep revealed this instability.</div>
+        </li>
+      </ul>
+
       <details>
         <summary>Technical detail — LOS predictor and transfer logic</summary>
         <div class="details-body">
           <p>Three quantile regression models were trained (q = 0.25, 0.50, 0.75) with log-transformed
           LOS as the response variable. Features: time in ED before admission, number of prior
-          admissions in 90 days, and admitting campus (one-hot encoded).</p>
+          admissions in 90 days, and admitting campus (one-hot encoded). An 80/20 train/test split
+          was used; residuals were evaluated on held-out data only.</p>
           <p>When a transfer is triggered, the patient's remaining historical trajectory is discarded
           and a new path is constructed by iteratively sampling the next state from an empirical
           transition probability matrix, with durations drawn from fitted per-state LOS distributions
@@ -543,7 +651,16 @@
       <div class="demo-block">
         <img src="sim_gif.gif"
              alt="Animated simulation showing patient figures moving through ED, boarding, floor, and ICU queues at La Jolla, East Campus, and Hillcrest simultaneously." />
-        <p>30-second preview of the La Jolla 12-hour transfer policy simulation.</p>
+        <div class="demo-steps">
+          <p>How to explore the full interactive animation:</p>
+          <ol>
+            <li>Click the button below to open the simulation in a new tab.</li>
+            <li>Use the play/pause control at the bottom to start the animation.</li>
+            <li>Hover over any patient figure to see their current state and wait time.</li>
+            <li>Watch how the queue lengths at each campus change over time.</li>
+          </ol>
+        </div>
+        <p>30-second preview · La Jolla 12-hour transfer policy</p>
         <a href="sim_animation.html" class="btn btn-primary" target="_blank">
           Explore the Full Interactive Animation →
         </a>
@@ -698,6 +815,19 @@
           <p class="role">Assistant Adjunct Professor, Medicine · UC San Diego</p>
         </div>
       </div>
+
+      <h3 style="margin-top:2.5rem;">Prior Work &amp; Acknowledgements</h3>
+      <p style="font-size:0.88rem;color:#555;">
+        This project builds on a body of prior DES research in hospital operations. Key works that
+        informed our design and methodology:
+      </p>
+      <ul class="ref-list">
+        <li><strong>Day et al. (2012)</strong> — Demonstrated that adding a healthcare provider to ED triage could reduce mean length of stay by 15%; validated using DES. <em>Emergency Medicine Journal.</em></li>
+        <li><strong>Ahmed &amp; Alkhamis (2009)</strong> — Used simulation-optimization to show that strategic resource allocation at patient entry can cut wait times by 40% without added cost. <em>European Journal of Operational Research.</em></li>
+        <li><strong>Kuo et al. (2014)</strong> — Showed that fitting LOS distributions from EHR data (rather than assumptions) meaningfully improves DES fidelity. <em>Flexible Services and Manufacturing Journal.</em></li>
+        <li><strong>Boyle et al. (2021)</strong> — Presented a framework for generalisable, data-driven ED simulation models. <em>European Journal of Operational Research.</em></li>
+        <li><strong>Paul et al. (2010)</strong> — Systematic review emphasizing that poorly calibrated simulation models can lead to misleading policy recommendations. <em>Simulation.</em></li>
+      </ul>
     </div>
   </section>
 
@@ -713,6 +843,8 @@
     </p>
     <p style="margin-top:0.5rem; font-size:0.72rem;">
       Data provided by UC San Diego Health. Built by Nadine Orriss &amp; Kayanne Tran.
+      Simulation engine: <a href="https://simpy.readthedocs.io" target="_blank">SimPy</a> &amp;
+      <a href="https://github.com/AliHarp/vidigi" target="_blank">vidigi</a>.
     </p>
   </footer>
 
