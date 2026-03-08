@@ -32,9 +32,14 @@
       line-height: 1.75;
     }
 
-    /* ── Nav ── */
+    /* ── Nav wrapper — sticky container for nav + dropdown ── */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
     nav {
-      position: sticky; top: 0; z-index: 100;
       background: var(--ucsd-blue);
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 2rem; height: 52px;
@@ -62,10 +67,15 @@
       background: rgba(255,255,255,0.8); border-radius: 2px;
       transition: all 0.2s;
     }
+
+    /* ── Mobile menu — no position:absolute, lives inside sticky wrapper ── */
     .mobile-menu {
       display: none;
-      background: var(--ucsd-blue); border-top: 1px solid rgba(255,255,255,0.1);
-      padding: 1rem 2rem; flex-direction: column; gap: 0.8rem; z-index: 99;
+      background: var(--ucsd-blue);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem 2rem;
+      flex-direction: column;
+      gap: 0.8rem;
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
@@ -333,27 +343,29 @@
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav>
-    <a href="#" class="brand">SimHospital</a>
-    <ul>
-      <li><a href="#introduction">Problem</a></li>
-      <li><a href="#data">Data</a></li>
-      <li><a href="#methods">Methods</a></li>
-      <li><a href="#results">Results</a></li>
-      <li><a href="#team">Team</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#" onclick="closeMobileMenu()">↑ Top</a>
-    <a href="#introduction" onclick="closeMobileMenu()">Problem</a>
-    <a href="#data" onclick="closeMobileMenu()">Data</a>
-    <a href="#methods" onclick="closeMobileMenu()">Methods</a>
-    <a href="#results" onclick="closeMobileMenu()">Results</a>
-    <a href="#team" onclick="closeMobileMenu()">Team</a>
+  <!-- nav-wrapper is sticky; mobile-menu lives inside it so it scrolls with nav -->
+  <div class="nav-wrapper">
+    <nav>
+      <a href="#" class="brand">SimHospital</a>
+      <ul>
+        <li><a href="#introduction">Problem</a></li>
+        <li><a href="#data">Data</a></li>
+        <li><a href="#methods">Methods</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#team">Team</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#" onclick="closeMobileMenu()">↑ Top</a>
+      <a href="#introduction" onclick="closeMobileMenu()">Problem</a>
+      <a href="#data" onclick="closeMobileMenu()">Data</a>
+      <a href="#methods" onclick="closeMobileMenu()">Methods</a>
+      <a href="#results" onclick="closeMobileMenu()">Results</a>
+      <a href="#team" onclick="closeMobileMenu()">Team</a>
+    </div>
   </div>
 
   <!-- Hero -->
@@ -402,62 +414,15 @@
       <p class="section-eyebrow">The Problem</p>
       <h2>When the Emergency Department Becomes a Waiting Room</h2>
       <div class="divider"></div>
-
-      <p>
-        Imagine you've just been admitted to the hospital, but there are no inpatient beds available yet.
-        Instead of moving to the right unit to start your care, you wait — in the emergency department —
-        sometimes for many hours. This is called <strong>ED boarding</strong>, and it's a widespread
-        problem in American hospitals. It leads to longer wait times for everyone in the ER, lower quality
-        of care for admitted patients, and enormous stress on frontline staff.
-      </p>
-
-      <div class="callout">
-        <strong>Why is this so hard to fix?</strong> The ED is just one piece of a much larger system.
-        Patients don't leave the ER until there's a bed for them upstairs — but those beds are occupied
-        by other patients who can't be discharged until they're recovered. It's a chain reaction that
-        no single department can solve on its own.
-      </div>
-
-      <p>
-        UCSD Health operates three hospital campuses — La Jolla, Hillcrest, and East Campus — that
-        collectively see hundreds of patients every day. In theory, a patient who can't get a bed at
-        one campus could be transferred to another with available capacity. In practice, health systems
-        have no safe way to experiment: you can't reroute hundreds of real patients just to see if a
-        policy might work better.
-      </p>
-
+      <p>Imagine you've just been admitted to the hospital, but there are no inpatient beds available yet. Instead of moving to the right unit to start your care, you wait — in the emergency department — sometimes for many hours. This is called <strong>ED boarding</strong>, and it's a widespread problem in American hospitals. It leads to longer wait times for everyone in the ER, lower quality of care for admitted patients, and enormous stress on frontline staff.</p>
+      <div class="callout"><strong>Why is this so hard to fix?</strong> The ED is just one piece of a much larger system. Patients don't leave the ER until there's a bed for them upstairs — but those beds are occupied by other patients who can't be discharged until they're recovered. It's a chain reaction that no single department can solve on its own.</div>
+      <p>UCSD Health operates three hospital campuses — La Jolla, Hillcrest, and East Campus — that collectively see hundreds of patients every day. In theory, a patient who can't get a bed at one campus could be transferred to another with available capacity. In practice, health systems have no safe way to experiment: you can't reroute hundreds of real patients just to see if a policy might work better.</p>
       <h3>Who This Is For</h3>
-      <p>
-        This tool is designed for <strong>hospital operations leaders and health system planners</strong>
-        at UCSD Health — people responsible for capacity management, patient throughput, and
-        inter-campus coordination. Rather than relying on gut instinct or historical averages, they
-        can use this simulation to pressure-test transfer policies in a risk-free virtual environment
-        before committing to any real change in operations.
-      </p>
-
+      <p>This tool is designed for <strong>hospital operations leaders and health system planners</strong> at UCSD Health — people responsible for capacity management, patient throughput, and inter-campus coordination. Rather than relying on gut instinct or historical averages, they can use this simulation to pressure-test transfer policies in a risk-free virtual environment before committing to any real change in operations.</p>
       <h3>Our Approach: A Virtual Replica of UCSD Health</h3>
-      <p>
-        We built a <strong>discrete event simulation (DES)</strong> — a computer model that recreates
-        patient flow across all three UCSD Health campuses simultaneously. Think of it as a flight
-        simulator for hospital operations: instead of risking real patients, administrators can test
-        different transfer policies in the model, see what happens, and make smarter decisions before
-        ever changing anything in the real world.
-      </p>
-      <p>
-        What makes our simulation unusual is that instead of inventing fictional patient paths,
-        each virtual patient follows an <em>actual historical journey</em> drawn from a library
-        of 150,337 real UCSD Health encounters — making it as faithful a replica of the real
-        system as the data allows.
-      </p>
-
-      <div class="alert">
-        <strong>Scope &amp; boundaries:</strong> This is a research and planning tool, not a clinical
-        deployment. It models <em>bed capacity and patient flow only</em> — it does not make treatment
-        recommendations, account for clinical contraindications, patient consent, or staffing constraints.
-        All simulation results are comparative (policy A vs. policy B vs. baseline); absolute numbers
-        should be interpreted as directional signals, not operational mandates. Transfer policies were
-        each tested in isolation — simultaneous multi-campus transfer logic is a direction for future work.
-      </div>
+      <p>We built a <strong>discrete event simulation (DES)</strong> — a computer model that recreates patient flow across all three UCSD Health campuses simultaneously. Think of it as a flight simulator for hospital operations: instead of risking real patients, administrators can test different transfer policies in the model, see what happens, and make smarter decisions before ever changing anything in the real world.</p>
+      <p>What makes our simulation unusual is that instead of inventing fictional patient paths, each virtual patient follows an <em>actual historical journey</em> drawn from a library of 150,337 real UCSD Health encounters — making it as faithful a replica of the real system as the data allows.</p>
+      <div class="alert"><strong>Scope &amp; boundaries:</strong> This is a research and planning tool, not a clinical deployment. It models <em>bed capacity and patient flow only</em> — it does not make treatment recommendations, account for clinical contraindications, patient consent, or staffing constraints. All simulation results are comparative (policy A vs. policy B vs. baseline); absolute numbers should be interpreted as directional signals, not operational mandates. Transfer policies were each tested in isolation — simultaneous multi-campus transfer logic is a direction for future work.</div>
     </div>
   </section>
 
@@ -467,58 +432,22 @@
       <p class="section-eyebrow">The Data</p>
       <h2>One Year of Real Patient Journeys</h2>
       <div class="divider"></div>
-
-      <p>
-        Our simulation is built on <strong>Admit-Discharge-Transfer (ADT)</strong> event data from
-        UC San Diego Health — a de-identified record of every time a patient was admitted, moved
-        between units, or discharged during a one-year observation period. Each event is timestamped
-        and linked to a specific patient encounter, department, care tier, and campus.
-      </p>
-      <p>
-        The raw dataset contains <strong>2.1 million events across 985,000 patient encounters</strong>.
-        After filtering to patients who physically occupied hospital beds, we retained
-        <strong>150,337 complete patient trajectories</strong> suitable for simulation. For the
-        length-of-stay prediction model, we held out 20% of encounters as a test set, with
-        the remaining 80% used for training — ensuring the predictor was never evaluated on
-        data it had seen before.
-      </p>
-
+      <p>Our simulation is built on <strong>Admit-Discharge-Transfer (ADT)</strong> event data from UC San Diego Health — a de-identified record of every time a patient was admitted, moved between units, or discharged during a one-year observation period. Each event is timestamped and linked to a specific patient encounter, department, care tier, and campus.</p>
+      <p>The raw dataset contains <strong>2.1 million events across 985,000 patient encounters</strong>. After filtering to patients who physically occupied hospital beds, we retained <strong>150,337 complete patient trajectories</strong> suitable for simulation. For the length-of-stay prediction model, we held out 20% of encounters as a test set, with the remaining 80% used for training — ensuring the predictor was never evaluated on data it had seen before.</p>
       <div class="campus-grid">
-        <div class="campus-card">
-          <h4>La Jolla</h4>
-          <p>Jacobs Medical Center &amp; Sulpizio Cardiovascular Center · 418 posted beds · Highest patient volume</p>
-        </div>
-        <div class="campus-card">
-          <h4>Hillcrest</h4>
-          <p>Hillcrest Medical Center · 381 posted beds · Most available slack capacity</p>
-        </div>
-        <div class="campus-card">
-          <h4>East Campus</h4>
-          <p>East Campus Medical Center · 302 posted beds · Smallest campus, critically constrained ICU</p>
-        </div>
+        <div class="campus-card"><h4>La Jolla</h4><p>Jacobs Medical Center &amp; Sulpizio Cardiovascular Center · 418 posted beds · Highest patient volume</p></div>
+        <div class="campus-card"><h4>Hillcrest</h4><p>Hillcrest Medical Center · 381 posted beds · Most available slack capacity</p></div>
+        <div class="campus-card"><h4>East Campus</h4><p>East Campus Medical Center · 302 posted beds · Smallest campus, critically constrained ICU</p></div>
       </div>
-
-      <p>
-        Patient arrivals vary meaningfully between weekdays and weekends — La Jolla averages
-        198 arrivals per weekday but only 149 per weekend day, a ~25% drop driven by fewer
-        elective admissions. Our simulation models these patterns separately to reproduce the
-        real rhythms of the health system.
-      </p>
-
+      <p>Patient arrivals vary meaningfully between weekdays and weekends — La Jolla averages 198 arrivals per weekday but only 149 per weekend day, a ~25% drop driven by fewer elective admissions. Our simulation models these patterns separately to reproduce the real rhythms of the health system.</p>
       <details>
         <summary>Technical detail — Data preprocessing pipeline</summary>
         <div class="details-body">
           <p>The raw ADT data required a four-step cleaning pipeline before it was simulation-ready:</p>
-          <p><strong>Step 1 — Filter to bed-occupying patients.</strong> We identified 11 patient classes
-          that physically occupy beds and removed 22 outpatient classes, reducing the dataset from
-          2.19M to 1.15M rows.</p>
-          <p><strong>Step 2 — Drop single-event encounters.</strong> 1,720 encounters (1.1%) had only
-          one event and were dropped.</p>
-          <p><strong>Step 3 — Tier mapping.</strong> Raw department labels were collapsed into four care
-          tiers: ED, Floor, ICU, and Boarding. ED events required special handling because the
-          department group field was never populated for emergency departments in the source data.</p>
-          <p><strong>Step 4 — Timestamp-based ordering.</strong> We reordered all events by timestamp
-          to handle sequence numbering inconsistencies in the source data.</p>
+          <p><strong>Step 1 — Filter to bed-occupying patients.</strong> We identified 11 patient classes that physically occupy beds and removed 22 outpatient classes, reducing the dataset from 2.19M to 1.15M rows.</p>
+          <p><strong>Step 2 — Drop single-event encounters.</strong> 1,720 encounters (1.1%) had only one event and were dropped.</p>
+          <p><strong>Step 3 — Tier mapping.</strong> Raw department labels were collapsed into four care tiers: ED, Floor, ICU, and Boarding. ED events required special handling because the department group field was never populated for emergency departments in the source data.</p>
+          <p><strong>Step 4 — Timestamp-based ordering.</strong> We reordered all events by timestamp to handle sequence numbering inconsistencies in the source data.</p>
         </div>
       </details>
     </div>
@@ -530,21 +459,8 @@
       <p class="section-eyebrow">Methods</p>
       <h2>Building a Virtual Hospital System</h2>
       <div class="divider"></div>
-
-      <p>
-        The simulation models each patient as a sequence of states — <strong>ED → Floor → ICU →
-        Discharge</strong> — across any of the three campuses. We added a fourth care state,
-        <strong>Boarding</strong>, to explicitly model patients who have been admitted as inpatients
-        but are physically stuck in the ED waiting for a bed upstairs. This gives us 12 active
-        states in total (4 tiers × 3 campuses), plus discharge.
-      </p>
-      <p>
-        Rather than assigning patients synthetic paths, each arriving patient is assigned an
-        <em>actual historical trajectory</em> randomly sampled from the 150,337-encounter library.
-        Bed capacity for each of the 12 states was calibrated from the data itself by observing
-        steady-state occupancy in an unconstrained simulation run.
-      </p>
-
+      <p>The simulation models each patient as a sequence of states — <strong>ED → Floor → ICU → Discharge</strong> — across any of the three campuses. We added a fourth care state, <strong>Boarding</strong>, to explicitly model patients who have been admitted as inpatients but are physically stuck in the ED waiting for a bed upstairs. This gives us 12 active states in total (4 tiers × 3 campuses), plus discharge.</p>
+      <p>Rather than assigning patients synthetic paths, each arriving patient is assigned an <em>actual historical trajectory</em> randomly sampled from the 150,337-encounter library. Bed capacity for each of the 12 states was calibrated from the data itself by observing steady-state occupancy in an unconstrained simulation run.</p>
       <h3>What We Built vs. What We Used</h3>
       <div class="contrib-grid">
         <div class="contrib-card">
@@ -572,22 +488,9 @@
           </ul>
         </div>
       </div>
-
       <h3>Predicting Who Needs a Long Stay</h3>
-      <p>
-        To enable smarter transfer decisions, we trained a <strong>length-of-stay (LOS) predictor</strong>
-        using quantile regression. At the moment a patient is admitted from the ED, the model
-        predicts whether their stay is likely to be long — using three features available at that
-        moment: how long they've already been in the ED, how many times they've been admitted
-        in the past 90 days, and which campus they're at.
-      </p>
-      <p>
-        We predict the <em>75th percentile</em> of expected LOS rather than the average, because
-        hospital LOS distributions are heavily skewed by a small number of very long stays.
-        Patients whose predicted LOS exceeds a threshold are flagged for possible transfer to
-        a less congested campus before they occupy a scarce inpatient bed.
-      </p>
-
+      <p>To enable smarter transfer decisions, we trained a <strong>length-of-stay (LOS) predictor</strong> using quantile regression. At the moment a patient is admitted from the ED, the model predicts whether their stay is likely to be long — using three features available at that moment: how long they've already been in the ED, how many times they've been admitted in the past 90 days, and which campus they're at.</p>
+      <p>We predict the <em>75th percentile</em> of expected LOS rather than the average, because hospital LOS distributions are heavily skewed by a small number of very long stays. Patients whose predicted LOS exceeds a threshold are flagged for possible transfer to a less congested campus before they occupy a scarce inpatient bed.</p>
       <h3>How the Project Evolved</h3>
       <p>Several design decisions changed significantly after we saw early results:</p>
       <ul class="iter-list">
@@ -608,20 +511,12 @@
           <div><strong>Single threshold → threshold sweep.</strong> Testing only one LOS threshold initially obscured the non-linear behavior we later discovered: East Campus ICU is catastrophically overwhelmed at a 3-hour Hillcrest threshold but partially recovers at 8 hours. The sweep revealed this instability.</div>
         </li>
       </ul>
-
       <details>
         <summary>Technical detail — LOS predictor and transfer logic</summary>
         <div class="details-body">
-          <p>Three quantile regression models were trained (q = 0.25, 0.50, 0.75) with log-transformed
-          LOS as the response variable. Features: time in ED before admission, number of prior
-          admissions in 90 days, and admitting campus (one-hot encoded). An 80/20 train/test split
-          was used; residuals were evaluated on held-out data only.</p>
-          <p>When a transfer is triggered, the patient's remaining historical trajectory is discarded
-          and a new path is constructed by iteratively sampling the next state from an empirical
-          transition probability matrix, with durations drawn from fitted per-state LOS distributions
-          (lognormal for floor/ICU, exponential for boarding).</p>
-          <p>Each source campus was tested independently at three thresholds: 3, 8, and 12 hours,
-          over a 4,328-hour (~6 month) simulation window with a fixed random seed of 42.</p>
+          <p>Three quantile regression models were trained (q = 0.25, 0.50, 0.75) with log-transformed LOS as the response variable. Features: time in ED before admission, number of prior admissions in 90 days, and admitting campus (one-hot encoded). An 80/20 train/test split was used; residuals were evaluated on held-out data only.</p>
+          <p>When a transfer is triggered, the patient's remaining historical trajectory is discarded and a new path is constructed by iteratively sampling the next state from an empirical transition probability matrix, with durations drawn from fitted per-state LOS distributions (lognormal for floor/ICU, exponential for boarding).</p>
+          <p>Each source campus was tested independently at three thresholds: 3, 8, and 12 hours, over a 4,328-hour (~6 month) simulation window with a fixed random seed of 42.</p>
         </div>
       </details>
     </div>
@@ -633,24 +528,11 @@
       <p class="section-eyebrow">Results &amp; Impact</p>
       <h2>What the Simulation Reveals</h2>
       <div class="divider"></div>
-
-      <p>
-        After a 25–30 day warm-up period, bed utilization stabilizes into realistic steady-state
-        patterns. The results are striking: two of the three campuses are chronically operating
-        near or above capacity, with serious consequences for patient wait times.
-      </p>
-
+      <p>After a 25–30 day warm-up period, bed utilization stabilizes into realistic steady-state patterns. The results are striking: two of the three campuses are chronically operating near or above capacity, with serious consequences for patient wait times.</p>
       <h3>See It in Action</h3>
-      <p>
-        The animation below shows a 30-second snippet of the simulation running the
-        recommended transfer policy — routing long-stay patients out of La Jolla at a
-        12-hour LOS threshold. Each figure represents a patient moving through the system
-        in real time across all three campuses.
-      </p>
-
+      <p>The animation below shows a 30-second snippet of the simulation running the recommended transfer policy — routing long-stay patients out of La Jolla at a 12-hour LOS threshold. Each figure represents a patient moving through the system in real time across all three campuses.</p>
       <div class="demo-block">
-        <img src="sim_gif.gif"
-             alt="Animated simulation showing patient figures moving through ED, boarding, floor, and ICU queues at La Jolla, East Campus, and Hillcrest simultaneously." />
+        <img src="sim_gif.gif" alt="Animated simulation showing patient figures moving through ED, boarding, floor, and ICU queues at La Jolla, East Campus, and Hillcrest simultaneously." />
         <div class="demo-steps">
           <p>How to explore the full interactive animation:</p>
           <ol>
@@ -661,40 +543,21 @@
           </ol>
         </div>
         <p>30-second preview · La Jolla 12-hour transfer policy</p>
-        <a href="sim_animation.html" class="btn btn-primary" target="_blank">
-          Explore the Full Interactive Animation →
-        </a>
+        <a href="sim_animation.html" class="btn btn-primary" target="_blank">Explore the Full Interactive Animation →</a>
       </div>
-
       <h3>Where Is the System Breaking Down?</h3>
-
       <div class="fig-row">
         <div>
-          <div class="fig-wrap">
-            <img src="lj_avg.png"
-                 alt="Line chart of La Jolla bed utilization over 175 days. Floor beds stabilize around 340, ICU and boarding remain elevated." />
-          </div>
+          <div class="fig-wrap"><img src="lj_avg.png" alt="Line chart of La Jolla bed utilization over 175 days." /></div>
           <p class="fig-caption">La Jolla — average daily bed utilization over the 6-month baseline simulation.</p>
         </div>
         <div>
-          <div class="fig-wrap">
-            <img src="ec_avg.png"
-                 alt="Line chart of East Campus bed utilization over 175 days. Floor beds saturate near capacity, ICU remains critically high." />
-          </div>
+          <div class="fig-wrap"><img src="ec_avg.png" alt="Line chart of East Campus bed utilization over 175 days." /></div>
           <p class="fig-caption">East Campus — average daily bed utilization over the 6-month baseline simulation.</p>
         </div>
       </div>
-
-      <div class="fig-wrap">
-        <img src="prop_over_80.png"
-             alt="Bar chart showing proportion of simulation time each resource spent above 80% utilization. La Jolla floor, ICU, and boarding are all well above 50%. East Campus ICU and floor are similarly high. Hillcrest is comparatively low. ED resources are near zero across all campuses." />
-      </div>
-      <p class="fig-caption">
-        Proportion of simulation time each resource spent above 80% utilization.
-        La Jolla and East Campus are the most chronically constrained.
-        ED resources across all campuses are near zero — the bottleneck is inpatient capacity, not the ED itself.
-      </p>
-
+      <div class="fig-wrap"><img src="prop_over_80.png" alt="Bar chart showing proportion of simulation time each resource spent above 80% utilization." /></div>
+      <p class="fig-caption">Proportion of simulation time each resource spent above 80% utilization. La Jolla and East Campus are the most chronically constrained. ED resources across all campuses are near zero — the bottleneck is inpatient capacity, not the ED itself.</p>
       <ul class="finding-list">
         <li>La Jolla's floor unit exceeded 80% utilization <strong>73% of the time</strong>; its ICU 64%, boarding 59%.</li>
         <li>East Campus ICU exceeded 80% utilization <strong>63% of the time</strong>, despite having only 8 beds.</li>
@@ -703,61 +566,17 @@
         <li>Hillcrest spent comparatively little time above 80% — suggesting meaningful available capacity.</li>
         <li>The binding constraint is inpatient beds, <strong>not the ED</strong>.</li>
       </ul>
-
-      <div class="fig-wrap">
-        <img src="avg_wait_per_resource.png"
-             alt="Bar chart of average wait time per resource in hours. ICU East Campus is by far the tallest bar at approximately 220 hours. ICU La Jolla is second at roughly 45 hours." />
-      </div>
-      <p class="fig-caption">
-        Average wait time per resource (hours) among all queue events in the baseline simulation.
-        East Campus ICU stands out dramatically — patients waiting for one of only 8 beds face
-        severe delays once that resource fills.
-      </p>
-
+      <div class="fig-wrap"><img src="avg_wait_per_resource.png" alt="Bar chart of average wait time per resource in hours. ICU East Campus is by far the tallest bar." /></div>
+      <p class="fig-caption">Average wait time per resource (hours) among all queue events in the baseline simulation. East Campus ICU stands out dramatically — patients waiting for one of only 8 beds face severe delays once that resource fills.</p>
       <h3>Transfer Policies: What Actually Helps?</h3>
-      <p>
-        We tested whether routing long-stay patients away from their admitting campus at the
-        moment of ED admission could reduce these bottlenecks. The answer depends critically
-        on <em>which</em> campus the transfers originate from.
-      </p>
-
-      <div class="fig-wrap">
-        <img src="overlay_la_jolla.png"
-             alt="Two line charts for La Jolla boarding unit and ICU showing baseline vs. 3hr, 8hr, and 12hr transfer thresholds. Under all thresholds, boarding drops to near zero." />
-      </div>
-      <p class="fig-caption">
-        La Jolla boarding unit and ICU utilization under three LOS-based transfer thresholds vs. baseline.
-        All three thresholds eliminate boarding congestion and meaningfully reduce ICU pressure.
-      </p>
-
-      <div class="fig-wrap">
-        <img src="sensitivy_curve.png"
-             alt="Two line charts showing mean wait time vs. LOS threshold at La Jolla boarding and East Campus ICU, with separate lines per source campus. La Jolla transfers reduce boarding to near zero. Hillcrest transfers cause a large spike at East Campus ICU at the 3-hour threshold." />
-      </div>
-      <p class="fig-caption">
-        Sensitivity of mean wait time to LOS transfer threshold, by source campus.
-        Transferring from La Jolla reliably reduces system-wide congestion.
-        Transferring from Hillcrest can overwhelm East Campus ICU under aggressive thresholds —
-        a non-obvious load-shifting effect that shows why transfer policy design requires system-wide thinking.
-      </p>
-
-      <div class="callout">
-        <strong>Key finding:</strong> Transferring long-stay patients out of La Jolla using an 8- or
-        12-hour LOS threshold is the most promising near-term operational intervention. It eliminates
-        boarding congestion at La Jolla without degrading conditions at receiving campuses.
-        Transfers from Hillcrest or East Campus require careful threshold selection — aggressive
-        rerouting can introduce new bottlenecks, particularly at East Campus's small 8-bed ICU.
-      </div>
-
+      <p>We tested whether routing long-stay patients away from their admitting campus at the moment of ED admission could reduce these bottlenecks. The answer depends critically on <em>which</em> campus the transfers originate from.</p>
+      <div class="fig-wrap"><img src="overlay_la_jolla.png" alt="Two line charts for La Jolla boarding unit and ICU showing baseline vs. 3hr, 8hr, and 12hr transfer thresholds." /></div>
+      <p class="fig-caption">La Jolla boarding unit and ICU utilization under three LOS-based transfer thresholds vs. baseline. All three thresholds eliminate boarding congestion and meaningfully reduce ICU pressure.</p>
+      <div class="fig-wrap"><img src="sensitivy_curve.png" alt="Two line charts showing mean wait time vs. LOS threshold at La Jolla boarding and East Campus ICU, with separate lines per source campus." /></div>
+      <p class="fig-caption">Sensitivity of mean wait time to LOS transfer threshold, by source campus. Transferring from La Jolla reliably reduces system-wide congestion. Transferring from Hillcrest can overwhelm East Campus ICU under aggressive thresholds — a non-obvious load-shifting effect that shows why transfer policy design requires system-wide thinking.</p>
+      <div class="callout"><strong>Key finding:</strong> Transferring long-stay patients out of La Jolla using an 8- or 12-hour LOS threshold is the most promising near-term operational intervention. It eliminates boarding congestion at La Jolla without degrading conditions at receiving campuses. Transfers from Hillcrest or East Campus require careful threshold selection — aggressive rerouting can introduce new bottlenecks, particularly at East Campus's small 8-bed ICU.</div>
       <h3>How to Interpret These Results</h3>
-      <p>
-        The utilization percentages and wait times here are simulation outputs, not live measurements
-        from UCSD Health operations. The most meaningful signal is <em>comparative</em>: how does a
-        transfer policy perform relative to the no-transfer baseline, and does that pattern hold
-        across multiple threshold conditions? Consistent patterns across thresholds are more robust
-        findings than any single number.
-      </p>
-
+      <p>The utilization percentages and wait times here are simulation outputs, not live measurements from UCSD Health operations. The most meaningful signal is <em>comparative</em>: how does a transfer policy perform relative to the no-transfer baseline, and does that pattern hold across multiple threshold conditions? Consistent patterns across thresholds are more robust findings than any single number.</p>
       <h3>Limitations</h3>
       <ul class="finding-list">
         <li>Each source campus experiment was run in isolation — real-world deployment would involve simultaneous decisions across all campuses.</li>
@@ -765,15 +584,8 @@
         <li>The LOS predictor uses only three features; its wide residual spread means predictions are rough guides, not precise forecasts.</li>
         <li>Capacity parameters were derived from typical steady-state occupancy rather than licensed bed counts.</li>
       </ul>
-
       <h3>What Comes Next</h3>
-      <p>
-        Three directions stand out for future work: enriching the LOS predictor with clinical
-        features available at admission; modeling simultaneous multi-campus transfer logic to
-        capture system-wide interaction effects; and incorporating real-time capacity checks
-        into the transfer trigger so that transfers are only authorized when the receiving
-        campus has available beds.
-      </p>
+      <p>Three directions stand out for future work: enriching the LOS predictor with clinical features available at admission; modeling simultaneous multi-campus transfer logic to capture system-wide interaction effects; and incorporating real-time capacity checks into the transfer trigger so that transfers are only authorized when the receiving campus has available beds.</p>
     </div>
   </section>
 
@@ -783,15 +595,7 @@
       <p class="section-eyebrow">The Team</p>
       <h2>About Us</h2>
       <div class="divider"></div>
-      <p>
-        This project was conducted through the
-        <strong>Joan &amp; Irwin Jacobs Center for Health Innovation</strong> at UC San Diego
-        as part of the DSC 180B Capstone sequence. Data was provided by UC San Diego Health.
-        Simulation was implemented in Python using
-        <a href="https://simpy.readthedocs.io" target="_blank" style="color:var(--teal);">SimPy</a>
-        and <a href="https://github.com/AliHarp/vidigi" target="_blank" style="color:var(--teal);">vidigi</a>.
-      </p>
-
+      <p>This project was conducted through the <strong>Joan &amp; Irwin Jacobs Center for Health Innovation</strong> at UC San Diego as part of the DSC 180B Capstone sequence. Data was provided by UC San Diego Health. Simulation was implemented in Python using <a href="https://simpy.readthedocs.io" target="_blank" style="color:var(--teal);">SimPy</a> and <a href="https://github.com/AliHarp/vidigi" target="_blank" style="color:var(--teal);">vidigi</a>.</p>
       <div class="team-grid">
         <div class="team-card">
           <div class="team-avatar">NO</div>
@@ -815,12 +619,8 @@
           <p class="role">Assistant Adjunct Professor, Medicine · UC San Diego</p>
         </div>
       </div>
-
       <h3 style="margin-top:2.5rem;">Prior Work &amp; Acknowledgements</h3>
-      <p style="font-size:0.88rem;color:#555;">
-        This project builds on a body of prior DES research in hospital operations. Key works that
-        informed our design and methodology:
-      </p>
+      <p style="font-size:0.88rem;color:#555;">This project builds on a body of prior DES research in hospital operations. Key works that informed our design and methodology:</p>
       <ul class="ref-list">
         <li><strong>Day et al. (2012)</strong> — Demonstrated that adding a healthcare provider to ED triage could reduce mean length of stay by 15%; validated using DES. <em>Emergency Medicine Journal.</em></li>
         <li><strong>Ahmed &amp; Alkhamis (2009)</strong> — Used simulation-optimization to show that strategic resource allocation at patient entry can cut wait times by 40% without added cost. <em>European Journal of Operational Research.</em></li>
@@ -838,8 +638,7 @@
       &nbsp;·&nbsp;
       <a href="https://github.com/kayannet/SimHospital" target="_blank">GitHub</a>
       &nbsp;·&nbsp;
-      <a href="https://github.com/nadineorriss/artifact-directory-template/raw/main/report.pdf"
-         target="_blank">Report (PDF)</a>
+      <a href="https://github.com/nadineorriss/artifact-directory-template/raw/main/report.pdf" target="_blank">Report (PDF)</a>
     </p>
     <p style="margin-top:0.5rem; font-size:0.72rem;">
       Data provided by UC San Diego Health. Built by Nadine Orriss &amp; Kayanne Tran.
