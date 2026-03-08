@@ -52,6 +52,17 @@
     }
     nav ul a:hover { color: var(--ucsd-gold); }
 
+    /* ── Nav wrapper (makes mobile menu stick with nav) ── */
+    .nav-wrapper {
+      position: sticky; top: 0; z-index: 100;
+    }
+    nav {
+      background: var(--ucsd-blue);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 52px;
+      position: static; /* override any sticky on nav itself */
+    }
+
     /* ── Hamburger ── */
     .hamburger {
       display: none; flex-direction: column; gap: 5px;
@@ -63,9 +74,9 @@
       transition: all 0.2s;
     }
     .mobile-menu {
-      display: none; position: absolute; top: 52px; left: 0; right: 0;
+      display: none;
       background: var(--ucsd-blue); border-top: 1px solid rgba(255,255,255,0.1);
-      padding: 1rem 2rem; flex-direction: column; gap: 0.8rem; z-index: 99;
+      padding: 1rem 2rem; flex-direction: column; gap: 0.8rem;
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
@@ -278,26 +289,28 @@
 <body>
 
   <!-- Navigation -->
-  <nav>
-    <a href="#" class="brand">SimHospital</a>
-    <ul>
-      <li><a href="#introduction">Problem</a></li>
-      <li><a href="#data">Data</a></li>
-      <li><a href="#methods">Methods</a></li>
-      <li><a href="#results">Results</a></li>
-      <li><a href="#team">Team</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#" onclick="closeMobileMenu()">↑ Top</a>
-    <a href="#introduction" onclick="closeMobileMenu()">Problem</a>
-    <a href="#data" onclick="closeMobileMenu()">Data</a>
-    <a href="#methods" onclick="closeMobileMenu()">Methods</a>
-    <a href="#results" onclick="closeMobileMenu()">Results</a>
-    <a href="#team" onclick="closeMobileMenu()">Team</a>
+  <div class="nav-wrapper">
+    <nav>
+      <a href="#" class="brand">SimHospital</a>
+      <ul>
+        <li><a href="#introduction">Problem</a></li>
+        <li><a href="#data">Data</a></li>
+        <li><a href="#methods">Methods</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#team">Team</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#" onclick="closeMobileMenu()">↑ Top</a>
+      <a href="#introduction" onclick="closeMobileMenu()">Problem</a>
+      <a href="#data" onclick="closeMobileMenu()">Data</a>
+      <a href="#methods" onclick="closeMobileMenu()">Methods</a>
+      <a href="#results" onclick="closeMobileMenu()">Results</a>
+      <a href="#team" onclick="closeMobileMenu()">Team</a>
+    </div>
   </div>
 
   <!-- Hero -->
