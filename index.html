@@ -42,7 +42,7 @@
     nav .brand {
       font-family: 'Source Serif 4', serif; font-weight: 600;
       font-size: 1rem; color: #fff; letter-spacing: 0.02em;
-      white-space: nowrap;
+      white-space: nowrap; text-decoration: none; cursor: pointer;
     }
     nav ul { list-style: none; display: flex; gap: 1.8rem; flex-wrap: wrap; }
     nav ul a {
@@ -51,6 +51,30 @@
       letter-spacing: 0.07em; text-transform: uppercase; transition: color 0.2s;
     }
     nav ul a:hover { color: var(--ucsd-gold); }
+
+    /* ── Hamburger ── */
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: rgba(255,255,255,0.8); border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .mobile-menu {
+      display: none; position: absolute; top: 52px; left: 0; right: 0;
+      background: var(--ucsd-blue); border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem 2rem; flex-direction: column; gap: 0.8rem; z-index: 99;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: rgba(255,255,255,0.8); text-decoration: none;
+      font-size: 0.9rem; font-weight: 400; letter-spacing: 0.07em;
+      text-transform: uppercase; padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
 
     /* ── Hero ── */
     #hero {
@@ -96,18 +120,19 @@
     /* ── Stat bar ── */
     .stat-bar {
       background: var(--teal);
-      display: flex; justify-content: center; flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
     }
     .stat-item {
-      padding: 1.4rem 2.5rem; text-align: center;
+      padding: 1.4rem 1rem; text-align: center;
       border-right: 1px solid rgba(255,255,255,0.15);
     }
     .stat-item:last-child { border-right: none; }
     .stat-num {
-      font-family: 'Source Serif 4', serif; font-size: 1.6rem;
+      font-family: 'Source Serif 4', serif; font-size: clamp(1.1rem, 3vw, 1.6rem);
       font-weight: 600; color: #fff; display: block;
     }
-    .stat-label { font-size: 0.72rem; color: rgba(255,255,255,0.75); letter-spacing: 0.08em; text-transform: uppercase; }
+    .stat-label { font-size: clamp(0.6rem, 1.5vw, 0.72rem); color: rgba(255,255,255,0.75); letter-spacing: 0.06em; text-transform: uppercase; }
 
     /* ── Sections ── */
     section { padding: 5rem 2rem; }
@@ -241,12 +266,10 @@
     @media (max-width: 640px) {
       .campus-grid { grid-template-columns: 1fr; }
       .fig-row { grid-template-columns: 1fr; }
-      .stat-item { padding: 1rem 1.2rem; }
-      nav ul { gap: 1rem; }
-      nav ul a { font-size: 0.7rem; }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 540px) {
       nav ul { display: none; }
+      .hamburger { display: flex; }
       #hero { padding: 4rem 1.5rem 3rem; }
       section { padding: 3.5rem 1.25rem; }
     }
@@ -256,7 +279,7 @@
 
   <!-- Navigation -->
   <nav>
-    <span class="brand">SimHospital</span>
+    <a href="#" class="brand">SimHospital</a>
     <ul>
       <li><a href="#introduction">Problem</a></li>
       <li><a href="#data">Data</a></li>
@@ -264,7 +287,18 @@
       <li><a href="#results">Results</a></li>
       <li><a href="#team">Team</a></li>
     </ul>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#" onclick="closeMobileMenu()">↑ Top</a>
+    <a href="#introduction" onclick="closeMobileMenu()">Problem</a>
+    <a href="#data" onclick="closeMobileMenu()">Data</a>
+    <a href="#methods" onclick="closeMobileMenu()">Methods</a>
+    <a href="#results" onclick="closeMobileMenu()">Results</a>
+    <a href="#team" onclick="closeMobileMenu()">Team</a>
+  </div>
 
   <!-- Hero -->
   <section id="hero">
@@ -668,6 +702,17 @@
       Data provided by UC San Diego Health. Built by Nadine Orriss &amp; Kayanne Tran.
     </p>
   </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+    function closeMobileMenu() {
+      mobileMenu.classList.remove('open');
+    }
+  </script>
 
 </body>
 </html>
